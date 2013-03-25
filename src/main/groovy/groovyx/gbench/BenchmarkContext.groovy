@@ -15,19 +15,36 @@
  */
 package groovyx.gbench
 
+import java.lang.management.ManagementFactory
+import java.lang.management.ThreadMXBean
+
 /* $if version >= 2.0.0 $ */
 @groovy.transform.TypeChecked
 /* $endif$ */
 class BenchmarkContext {
-    
-    static final ThreadLocal context = new ThreadLocal()
-    
+
+    static final ThreadLocal context = new ThreadLocal() {
+        @Override
+        protected Object initialValue() {
+            ThreadMXBean thread = ManagementFactory.threadMXBean
+            boolean cpuTimeSupported = thread.currentThreadCpuTimeSupported
+            [
+                cpuTimeSupported: cpuTimeSupported,
+                measureCpuTime: cpuTimeSupported && BenchmarkSystem.measureCpuTime,
+                warmUpTime: BenchmarkSystem.warmUpTime,
+                maxWarmUpTime: BenchmarkSystem.maxWarmUpTime,
+                verbose: BenchmarkSystem.verbose,
+                quiet: BenchmarkSystem.quiet,
+            ]
+        }
+    }
+
     static Map get() {
         (Map) context.get()
     }
-    
+
     static void set(Map another) {
         context.set(another)
     }
-    
+
 }

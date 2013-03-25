@@ -12,12 +12,36 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */package groovyx.gbench;
+ */
+package groovyx.gbench;
 
 class BenchmarkSystem {
-    
-    public static boolean isMeasureCpuTime() {
-        Boolean.valueOf(System.properties.'gbench.measureCpuTime'?: true)
+
+    static String PREFIX = "gbench."
+
+    static def systemProperty(String name, defaultValue) {
+        def value = System.getProperty(name)
+        return value == null ? defaultValue : value
+    }
+
+    static boolean isMeasureCpuTime() {
+        Boolean.valueOf(systemProperty("${PREFIX}measureCpuTime", true))
+    }
+
+    static boolean isVerbose() {
+        Boolean.valueOf(systemProperty("${PREFIX}verbose", false))
+    }
+
+    static boolean isQuiet() {
+        Boolean.valueOf(systemProperty("${PREFIX}quiet", false))
+    }
+
+    static int getWarmUpTime() {
+        Integer.valueOf(systemProperty("${PREFIX}warmUpTime", BenchmarkConstants.AUTO_WARM_UP))
+    }
+
+    static int getMaxWarmUpTime() {
+        Integer.valueOf(systemProperty("${PREFIX}maxWarmUpTime", 60))
     }
 
 }
