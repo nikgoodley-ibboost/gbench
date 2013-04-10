@@ -1,4 +1,5 @@
-OVERVIEW:
+OVERVIEW
+--------
 
 GBench is a benchmarking module for Groovy. It allows you to compare the
 performance of programs.
@@ -12,7 +13,67 @@ Benchmark Builder allows you to correctly benchmark programs. Please read
 for understanding what the "correctly" means. Benchmark Transformation
 allows you to measure methods’ execution time without additional code.
 
-LICENSE:
+EXAMPLES
+--------
+
+Compare the performance of StringBuilder and StringBuffer using Benchmark
+Builder:
+
+  def r = benchmark {   // or new groovyx.gbench.BenchmarkBuilder().run {
+      'StringBuilder' {
+          def sb = new StringBuilder()
+          sb.append('foo')
+          sb.append('bar')
+          sb.append('baz')
+          sb.toString()
+      }
+      'StringBuffer' {
+          def sb = new StringBuffer()
+          sb.append('foo')
+          sb.append('bar')
+          sb.append('baz')
+          sb.toString()
+      }
+  }
+  r.prettyPrint()
+
+  /* stdout:
+  Environment
+  ===========
+  * Groovy: 2.1.1
+  * JVM: Java HotSpot(TM) 64-Bit Server VM (23.7-b01, Oracle Corporation)
+      * JRE: 1.7.0_17
+      * Total Memory: 97.125 MB
+      * Maximum Memory: 1143.125 MB
+  * OS: Mac OS X (10.8.3, x86_64)
+
+  Options
+  =======
+  * Warm Up: Auto (- 60 sec)
+  * CPU Time Measurement: On
+
+                 user  system  cpu  real
+
+  StringBuilder    98       0   98    98
+  StringBuffer    116       0  116   116
+  */
+
+Measure the execution time of a method using Benchmark Transformation:
+
+  import groovyx.gbench.Benchmark
+
+  class Task {
+      @Benchmark void run() {
+          // task
+      }
+  }
+
+  /* stdout:
+  Task  void run()  user:847000 system:1777000 cpu:2624000 real:4918000
+  */
+
+LICENSE
+-------
 
 GBench is copyright 2011-2013 Masato Nagai and licensed under the term of
 the Apache License, Version 2.0. See the file LICENSE for the full license.
